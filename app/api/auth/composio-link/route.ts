@@ -2,33 +2,41 @@ import { Composio } from "@composio/core";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { nanoid } from "nanoid";
+import { env } from "@/lib/env";
+import { createAuthState } from "@/lib/auth-state";
+
+const COOKIE_NAME = "composio_auth_state";
 
 export async function POST() {
   try {
-    const cookieStore = await cookies();
-    let userId = cookieStore.get("composio_user_id")?.value;
+    const userId = `user-${nanoid(10)}`;
+    const state = createAuthState(userId);
 
-    if (!userId) {
-      userId = `user-${nanoid(10)}`;
-      cookieStore.set("composio_user_id", userId);
-    }
+    const cookieStore = await cookies();
+    cookieStore.set(COOKIE_NAME, state, {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 10, // 10 minutes
+      path: "/",
+    });
 
     const composio = new Composio({
-      apiKey: process.env.COMPOSIO_API_KEY!,
+      apiKey: env.COMPOSIO_API_KEY,
     });
 
-    const authConfigId = process.env.AUTH_CONFIG_ID;
-    if (!authConfigId) {
-        return NextResponse.json({ error: "Missing AUTH_CONFIG_ID" }, { status: 500 });
-    }
+    const callbackUrl = env.AUTH_URL 
+      ? `${env.AUTH_URL}/auth/callback`
+      : "http://localhost:3000/auth/callback";
 
-    const connectionRequest = await composio.connectedAccounts.link(userId, authConfigId, {
-      callbackUrl: `${process.env.AUTH_URL || "http://localhost:3000"}/auth/callback`,
-    });
+    const connectionRequest = await composio.connectedAccounts.link(
+      userId,
+      env.AUTH_CONFIG_ID,
+      { callbackUrl }
+    );
 
     return NextResponse.json({ 
       redirectUrl: connectionRequest.redirectUrl,
-      connectionId: connectionRequest.id 
     });
   } catch (error) {
     console.error("Composio link error:", error);

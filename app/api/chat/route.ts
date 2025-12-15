@@ -4,7 +4,9 @@ import { openai } from '@ai-sdk/openai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
 import { experimental_createMCPClient } from '@ai-sdk/mcp';
+import { z } from 'zod';
 import { auth } from "@/lib/auth";
+import { env } from "@/lib/env";
 import { AVAILABLE_MODELS, DEFAULT_MODEL, type ModelId } from '@/lib/constants';
 
 export const maxDuration = 60;
@@ -51,6 +53,11 @@ function isValidModel(modelId: string): modelId is ModelId {
   return AVAILABLE_MODELS.some(m => m.id === modelId);
 }
 
+const chatRequestSchema = z.object({
+  messages: z.array(z.record(z.unknown())).min(1).max(100),
+  model: z.string().optional(),
+});
+
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -64,12 +71,18 @@ export async function POST(req: Request) {
   let client: Awaited<ReturnType<typeof experimental_createMCPClient>> | null = null;
 
   try {
-    const { messages, model: requestedModel } = await req.json();
-    const modelId = isValidModel(requestedModel) ? requestedModel : DEFAULT_MODEL;
+    const body = await req.json();
+    const parsed = chatRequestSchema.safeParse(body);
+    if (!parsed.success) {
+      return new Response("Invalid request body", { status: 400 });
+    }
+
+    const { messages, model: requestedModel } = body;
+    const modelId = isValidModel(requestedModel ?? '') ? requestedModel : DEFAULT_MODEL;
     const model = getModel(modelId);
 
     const composio = new Composio({
-      apiKey: process.env.COMPOSIO_API_KEY!,
+      apiKey: env.COMPOSIO_API_KEY,
     });
 
     const toolSession = await composio.create(session.user.id, {toolkits: ['GOOGLESLIDES','COMPOSIO_SEARCH', 'GEMINI']});

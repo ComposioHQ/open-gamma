@@ -10,7 +10,7 @@ export default function CallbackPage() {
   useEffect(() => {
     const verifyLogin = async () => {
       try {
-        const res = await fetch("/api/auth/composio-verify");
+        const res = await fetch("/api/auth/composio-verify", { method: "POST" });
         const data = await res.json();
         
         if (data.userId) {
