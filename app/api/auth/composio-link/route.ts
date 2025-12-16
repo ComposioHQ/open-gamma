@@ -25,17 +25,15 @@ export async function POST() {
       apiKey: env.COMPOSIO_API_KEY,
     });
 
-    const callbackUrl = env.AUTH_URL 
+    const callbackUrl = env.AUTH_URL
       ? `${env.AUTH_URL}/auth/callback`
       : "http://localhost:3000/auth/callback";
 
-    const connectionRequest = await composio.connectedAccounts.link(
-      userId,
-      env.AUTH_CONFIG_ID,
-      { callbackUrl }
-    );
+    const connectionRequest = await composio.connectedAccounts.link(userId, env.AUTH_CONFIG_ID, {
+      callbackUrl,
+    });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       redirectUrl: connectionRequest.redirectUrl,
     });
   } catch (error) {

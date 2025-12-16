@@ -26,6 +26,7 @@ A production-ready AI Chat application featuring tool usage (Google Slides, etc.
 ## Getting Started
 
 ### 1. Prerequisites
+
 - Node.js 18+
 - PostgreSQL database (local or cloud like Neon/Supabase)
 
@@ -83,6 +84,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Architecture
 
 ### Authentication Flow
+
 1. User clicks "Sign in with Composio".
 2. App generates a unique `userId` and calls the Composio link API.
 3. User authenticates with the external provider (e.g., Google/GitHub).
@@ -90,6 +92,7 @@ Open [http://localhost:3000](http://localhost:3000).
 5. App verifies the `userId` and creates a NextAuth session.
 
 ### AI & Tools
+
 The chat interface (`app/page.tsx`) uses the Vercel AI SDK `useChat` hook.
 Tools are executed via Composio on the server (`app/api/chat/route.ts`).
 Rate limiting is applied per user session.

@@ -37,7 +37,8 @@ const roobertMono = localFont({
 
 export const metadata: Metadata = {
   title: "Open Gamma - AI Presentation Generator",
-  description: "Create professional presentations instantly with AI. Generate pitch decks, sales presentations, and more.",
+  description:
+    "Create professional presentations instantly with AI. Generate pitch decks, sales presentations, and more.",
 };
 
 export default function RootLayout({

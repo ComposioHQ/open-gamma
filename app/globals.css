@@ -4,11 +4,11 @@
   --color-ui-primary: #f7f4f0;
   --color-ui-secondary: #f5f0ea;
   --color-ui-card: #fbf9f7;
-  
+
   /* Text Colors */
   --color-tx-primary: #000000;
   --color-tx-secondary: #696969;
-  
+
   /* Border Colors */
   --color-ui-border: #e2d2d2;
 
@@ -56,7 +56,7 @@
   --breakpoint-tablet: 1024px;
   --breakpoint-desktop: 1280px;
   --breakpoint-wide: 1536px;
-  
+
   /* Loader Animations */
   --animate-typing: typing 1s infinite;
   --animate-loading-dots: loading-dots 1.4s infinite;
@@ -70,13 +70,14 @@
   --animate-wave-bars: wave-bars 1.2s ease-in-out infinite;
   --animate-shimmer: shimmer 4s infinite linear;
   --animate-spinner-fade: spinner-fade 1.2s linear infinite;
-  
+
   /* Component Mappings for Shadcn/Loader */
   --color-primary: var(--color-tx-primary);
   --color-muted-foreground: var(--color-tx-secondary);
 
   @keyframes typing {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
       opacity: 0.5;
     }
@@ -87,7 +88,8 @@
   }
 
   @keyframes loading-dots {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0;
     }
     50% {
@@ -96,7 +98,8 @@
   }
 
   @keyframes wave {
-    0%, 100% {
+    0%,
+    100% {
       transform: scaleY(1);
     }
     50% {
@@ -105,7 +108,8 @@
   }
 
   @keyframes blink {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
     }
     50% {
@@ -114,7 +118,8 @@
   }
 
   @keyframes text-blink {
-    0%, 100% {
+    0%,
+    100% {
       color: var(--color-tx-primary);
     }
     50% {
@@ -123,7 +128,8 @@
   }
 
   @keyframes bounce-dots {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(0.8);
       opacity: 0.5;
     }
@@ -134,7 +140,8 @@
   }
 
   @keyframes thin-pulse {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(0.95);
       opacity: 0.8;
     }
@@ -145,7 +152,8 @@
   }
 
   @keyframes pulse-dot {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(1);
       opacity: 0.8;
     }
@@ -165,7 +173,8 @@
   }
 
   @keyframes wave-bars {
-    0%, 100% {
+    0%,
+    100% {
       transform: scaleY(1);
       opacity: 0.5;
     }
@@ -206,18 +215,41 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-flecha), serif;
 }
 
 /* Syntax Highlighting Classes */
-.token.keyword, .token.builtin, .token.class-name { color: var(--color-syntax-keyword); }
-.token.string { color: var(--color-syntax-string); }
-.token.number, .token.attr-value { color: var(--color-syntax-number); }
-.token.function { color: var(--color-syntax-function); }
-.token.comment { color: var(--color-syntax-comment); }
-.token.variable, .token.tag { color: var(--color-syntax-variable); }
-.token.operator { color: var(--color-syntax-operator); }
+.token.keyword,
+.token.builtin,
+.token.class-name {
+  color: var(--color-syntax-keyword);
+}
+.token.string {
+  color: var(--color-syntax-string);
+}
+.token.number,
+.token.attr-value {
+  color: var(--color-syntax-number);
+}
+.token.function {
+  color: var(--color-syntax-function);
+}
+.token.comment {
+  color: var(--color-syntax-comment);
+}
+.token.variable,
+.token.tag {
+  color: var(--color-syntax-variable);
+}
+.token.operator {
+  color: var(--color-syntax-operator);
+}
 
 /* Custom Component Classes */
 @layer components {

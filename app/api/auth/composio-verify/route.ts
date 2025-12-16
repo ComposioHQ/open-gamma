@@ -25,8 +25,11 @@ export async function POST() {
 
   try {
     const composio = new Composio({ apiKey: env.COMPOSIO_API_KEY });
-    const connections = await composio.connectedAccounts.list({ userIds: [userId] });
-    
+    const connections = await composio.connectedAccounts.list({
+      userIds: [userId],
+      toolkitSlugs: ["GITHUB"],
+    });
+
     if (!connections.items || connections.items.length === 0) {
       cookieStore.delete(COOKIE_NAME);
       return NextResponse.json({ error: "No connected account found" }, { status: 400 });

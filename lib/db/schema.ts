@@ -76,5 +76,3 @@ export const chatMessages = pgTable("chat_message", {
   parts: jsonb("parts").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
 });
-
-

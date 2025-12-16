@@ -1,22 +1,17 @@
-'use client';
+"use client";
 
-import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Loader } from '@/components/ui/loader';
-import { ToolCallPreview } from './tool-call-preview';
-import type { UIMessage } from 'ai';
+import ReactMarkdown from "react-markdown";
+import { Loader } from "@/components/ui/loader";
+import { ToolCallPreview } from "./tool-call-preview";
+import { extractTextContent, type UIMessagePart } from "@/lib/types";
+import type { UIMessage } from "ai";
 
 interface ChatMessageProps {
   message: UIMessage;
 }
 
-interface TextPart {
-  type: 'text';
-  text: string;
-}
-
 interface ToolInvocationPart {
-  type: 'tool-invocation';
+  type: "tool-invocation";
   toolCallId: string;
   toolName: string;
   args: Record<string, unknown>;
@@ -24,27 +19,17 @@ interface ToolInvocationPart {
   result?: unknown;
 }
 
-type MessagePart = TextPart | ToolInvocationPart | { type: string };
-
 export function ChatMessage({ message }: ChatMessageProps) {
-  const isUser = message.role === 'user';
-  
-  const parts = (message.parts || []) as MessagePart[];
-
-  const text = parts
-    .filter((p): p is TextPart => p.type === 'text')
-    .map((p) => p.text)
-    .join('');
-
-  const toolParts = parts.filter(
-    (p): p is ToolInvocationPart => p.type === 'tool-invocation'
-  );
+  const isUser = message.role === "user";
+  const parts = (message.parts ?? []) as UIMessagePart[];
+  const text = extractTextContent(parts);
+  const toolParts = parts.filter((p): p is ToolInvocationPart => p.type === "tool-invocation");
 
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-6`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-6`}>
       <div
         className={`max-w-[90%] rounded-2xl px-4 py-3 ${
-          isUser ? 'bg-ui-secondary text-tx-primary' : 'bg-transparent pl-0'
+          isUser ? "bg-ui-secondary text-tx-primary" : "bg-transparent pl-0"
         }`}
       >
         {text ? (
@@ -54,7 +39,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
               a: ({ ...props }) => (
                 <a
                   {...props}
-                  className={`text-blue-600 hover:underline break-words ${props.className ?? ''}`}
+                  className={`text-blue-600 hover:underline break-words ${props.className ?? ""}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 />
@@ -74,9 +59,9 @@ export function ChatMessage({ message }: ChatMessageProps) {
         )}
 
         {toolParts.map((toolPart) => (
-            <div key={toolPart.toolCallId} className="mt-2">
-              <ToolCallPreview toolPart={toolPart} />
-            </div>
+          <div key={toolPart.toolCallId} className="mt-2">
+            <ToolCallPreview toolPart={toolPart} />
+          </div>
         ))}
       </div>
     </div>

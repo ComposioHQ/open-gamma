@@ -28,4 +28,3 @@ export function useLocalStorage<T>(key: string, initialValue: T): readonly [T, S
 
   return [storedValue, setValue] as const;
 }
-

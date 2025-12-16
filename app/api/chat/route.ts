@@ -1,13 +1,13 @@
-import { Composio } from '@composio/core';
-import { convertToModelMessages, stepCountIs, streamText, type LanguageModel } from 'ai';
-import { openai } from '@ai-sdk/openai';
-import { anthropic } from '@ai-sdk/anthropic';
-import { google } from '@ai-sdk/google';
-import { experimental_createMCPClient } from '@ai-sdk/mcp';
-import { z } from 'zod';
+import { Composio } from "@composio/core";
+import { convertToModelMessages, stepCountIs, streamText, type LanguageModel } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { anthropic } from "@ai-sdk/anthropic";
+import { google } from "@ai-sdk/google";
+import { experimental_createMCPClient } from "@ai-sdk/mcp";
+import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { env } from "@/lib/env";
-import { AVAILABLE_MODELS, DEFAULT_MODEL, type ModelId } from '@/lib/constants';
+import { DEFAULT_MODEL } from "@/lib/constants";
 
 export const maxDuration = 60;
 
@@ -33,24 +33,19 @@ function checkRateLimit(userId: string) {
 }
 
 function getModel(modelId: string): LanguageModel {
-  const [provider, ...modelParts] = modelId.split('/');
-  const modelName = modelParts.join('/');
+  const [provider, ...modelParts] = modelId.split("/");
+  const modelName = modelParts.join("/");
 
   switch (provider) {
-    case 'openai':
+    case "openai":
       return openai(modelName);
-    case 'anthropic':
+    case "anthropic":
       return anthropic(modelName);
-    case 'google':
+    case "google":
       return google(modelName);
     default:
-      console.warn(`Unknown provider "${provider}", falling back to OpenAI`);
-      return openai('gpt-4.1');
+      return getModel(DEFAULT_MODEL);
   }
-}
-
-function isValidModel(modelId: string): modelId is ModelId {
-  return AVAILABLE_MODELS.some(m => m.id === modelId);
 }
 
 const chatRequestSchema = z.object({
@@ -77,19 +72,20 @@ export async function POST(req: Request) {
       return new Response("Invalid request body", { status: 400 });
     }
 
-    const { messages, model: requestedModel } = body;
-    const modelId = isValidModel(requestedModel ?? '') ? requestedModel : DEFAULT_MODEL;
-    const model = getModel(modelId);
+    const model = getModel(parsed.data.model ?? DEFAULT_MODEL);
+    const { messages } = body;
 
     const composio = new Composio({
       apiKey: env.COMPOSIO_API_KEY,
     });
 
-    const toolSession = await composio.create(session.user.id, {toolkits: ['GOOGLESLIDES','COMPOSIO_SEARCH', 'GEMINI']});
-    
+    const toolSession = await composio.create(session.user.id, {
+      toolkits: ["GOOGLESLIDES", "COMPOSIO_SEARCH", "GEMINI"],
+    });
+
     client = await experimental_createMCPClient({
       transport: {
-        type: 'http',
+        type: "http",
         url: toolSession.mcp.url,
         headers: toolSession.mcp.headers,
       },
@@ -162,4 +158,3 @@ export async function POST(req: Request) {
     return new Response("Internal Server Error", { status: 500 });
   }
 }
-

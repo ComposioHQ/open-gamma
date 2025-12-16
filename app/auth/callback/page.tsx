@@ -12,11 +12,11 @@ export default function CallbackPage() {
       try {
         const res = await fetch("/api/auth/composio-verify", { method: "POST" });
         const data = await res.json();
-        
+
         if (data.userId) {
-          await signIn("credentials", { 
-            userId: data.userId, 
-            callbackUrl: "/" 
+          await signIn("credentials", {
+            userId: data.userId,
+            callbackUrl: "/",
           });
         } else {
           setStatus("error");
@@ -36,7 +36,9 @@ export default function CallbackPage() {
         <div className="text-center">
           <h1 className="text-xl font-bold mb-2">Login Failed</h1>
           <p className="text-gray-600">Could not verify your authentication.</p>
-          <a href="/login" className="text-blue-500 mt-4 block">Try Again</a>
+          <a href="/login" className="text-blue-500 mt-4 block">
+            Try Again
+          </a>
         </div>
       </div>
     );

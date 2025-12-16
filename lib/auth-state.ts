@@ -35,7 +35,7 @@ export function verifyAuthState(token: string): { userId: string } | null {
 
   try {
     const state: AuthState = JSON.parse(Buffer.from(payload, "base64url").toString());
-    
+
     if (Date.now() > state.exp) {
       return null;
     }
@@ -49,4 +49,3 @@ export function verifyAuthState(token: string): { userId: string } | null {
     return null;
   }
 }
-

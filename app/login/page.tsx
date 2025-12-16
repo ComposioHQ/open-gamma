@@ -12,7 +12,7 @@ export default function LoginPage() {
         method: "POST",
       });
       const data = await response.json();
-      
+
       if (data.redirectUrl) {
         window.location.href = data.redirectUrl;
       }
@@ -25,9 +25,13 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-black font-sans">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg border border-ui-border text-center">
-        <h1 className="text-3xl font-serif font-bold mb-6 text-tx-primary">Welcome to Open Gamma</h1>
-        <p className="text-tx-secondary mb-8">Sign in to start creating presentations and documents with AI.</p>
-        
+        <h1 className="text-3xl font-serif font-bold mb-6 text-tx-primary">
+          Welcome to Open Gamma
+        </h1>
+        <p className="text-tx-secondary mb-8">
+          Sign in to start creating presentations and documents with AI.
+        </p>
+
         <button
           onClick={handleSignIn}
           disabled={isLoading}
