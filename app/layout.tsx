@@ -49,6 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        suppressHydrationWarning
         className={`${roobert.variable} ${flecha.variable} ${roobertMono.variable} antialiased font-sans`}
       >
         <Providers>{children}</Providers>
