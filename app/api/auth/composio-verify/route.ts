@@ -25,9 +25,10 @@ export async function POST() {
 
   try {
     const composio = new Composio({ apiKey: env.COMPOSIO_API_KEY });
+
+    // Check for Google Slides connection (not GitHub)
     const connections = await composio.connectedAccounts.list({
       userIds: [userId],
-      toolkitSlugs: ["GITHUB"],
     });
 
     if (!connections.items || connections.items.length === 0) {
